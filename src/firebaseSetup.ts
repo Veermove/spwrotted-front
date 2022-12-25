@@ -1,16 +1,39 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+// const firebaseConfig = {
+//     apiKey: process.env.apiKey,
+//     authDomain: process.env.authDomain,
+//     projectId: process.env.projectId,
+//     storageBucket: process.env.storageBucket,
+//     messagingSenderId: process.env.messagingSenderId,
+//     appId: process.env.appId,
+//     measurementId: process.env.measurementId,
+// };
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBfaWPf-67RgCEmF_tdqrjJZHEhzPzOI9U",
-  authDomain: "fir-auth-tut-622be.firebaseapp.com",
-  projectId: "fir-auth-tut-622be",
-  storageBucket: "fir-auth-tut-622be.appspot.com",
-  messagingSenderId: "548365078338",
-  appId: "1:548365078338:web:0dffb8e16a479c082a02db",
-}; //this is where your firebase app values you copied will go
+    apiKey: "AIzaSyD15FHif6MjgjbeET2XzXWifbDuTAm8WjU",
+    authDomain: "spwr-9e05c.firebaseapp.com",
+    projectId: "spwr-9e05c",
+    storageBucket: "spwr-9e05c.appspot.com",
+    messagingSenderId: "524823826204",
+    appId: "1:524823826204:web:781a7f7de76ff5016034d9",
+    measurementId: "G-WYKJMBSMT5",
+}
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const analytics =  getAnalytics(app);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-export const auth = firebase.auth();
+const authContext = { auth, createUserWithEmailAndPassword }
+
+export {
+    app,
+    analytics,
+    authContext,
+    db,
+};
+

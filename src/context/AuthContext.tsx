@@ -1,4 +1,52 @@
-import React from "react";
-import firebase from 'firebase/compat/app';
+import React, { useContext, useState, useEffect } from 'react';
+import { authContext } from '../firebaseSetup';
+import { User } from 'firebase/auth';
 
-export const AuthContext = React.createContext<firebase.User | null>(null);
+interface Props {
+  children: React.ReactNode;
+}
+
+export type AuthContextType = {
+    signup: (email: string, password: string) => void;
+    currentUser: User | null;
+}
+
+const AuthContext = React.createContext<AuthContextType | null>(null);
+
+export function useAuth() {
+    return useContext(AuthContext);
+}
+
+export const AuthProvider: React.FC<Props> = ({children}) => {
+    const
+        [currentUser, setCurrentUser] = useState<User | null>(null),
+        [loading, setLoading] = useState(true);
+
+
+    function signup(email: string, password: string) {
+        return authContext.createUserWithEmailAndPassword(
+                authContext.auth,
+                email, password
+            );
+    }
+
+    useEffect(() => {
+        const unsubscribe = authContext.auth.onAuthStateChanged(user => {
+            setCurrentUser(user);
+            setLoading(false);
+        });
+        return unsubscribe
+    }, [])
+
+
+    const value = {
+        currentUser,
+        signup
+    }
+
+    return (
+    <AuthContext.Provider value={value}>
+        {!loading && children}
+    </AuthContext.Provider>
+    )
+}
