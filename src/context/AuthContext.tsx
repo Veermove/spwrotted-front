@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { authContext } from '../firebaseSetup';
-import { User } from 'firebase/auth';
+import { User, UserCredential } from 'firebase/auth';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export type AuthContextType = {
-    signup: (email: string, password: string) => void;
+    signup: (email: string, password: string) => Promise<UserCredential>;
     currentUser: User | null;
 }
 

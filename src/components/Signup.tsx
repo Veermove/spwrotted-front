@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import { useAuth } from '../context/AuthContext';
 
@@ -12,34 +12,34 @@ export default function Signup() {
         [loading, setLoading] = useState(false),
         { signup } = useAuth()!;
 
-    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault();
+    const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
 
-        if (
-            emailRef.current       === null
-            || passwordRef.current === null
-            || confirmRef.current  === null
-        ) {
-            return setError("Please fill all required fields.");
-        }
+            if (
+                emailRef.current       === null
+                || passwordRef.current === null
+                || confirmRef.current  === null
+            ) {
+                return setError("Please fill all required fields.");
+            }
 
-        if (passwordRef.current.value !== confirmRef.current.value) {
-            return setError("Passwords do not match.");
-        }
+            if (passwordRef.current.value !== confirmRef.current.value) {
+                return setError("Passwords do not match.");
+            }
 
-        try {
-            setError("");
-            setLoading(true);
-            await signup(
-                emailRef.current.value,
-                passwordRef.current.value
-            );
-        } catch({ message }) {
-            setError("Failed to create account. " + message);
-        };
+            try {
+                setError("");
+                setLoading(true);
+                await signup(
+                    emailRef.current.value,
+                    passwordRef.current.value
+                );
+            } catch({ message }) {
+                setError("Failed to create account. " + message);
+            };
 
-        setLoading(false);
-    }
+            setLoading(false);
+        }, [signup]);
 
     return (
     <>
