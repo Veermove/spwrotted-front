@@ -1,7 +1,12 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+
+
+// #TODO:
+// move config to .env file
+// and reference values like below \|/
 
 // const firebaseConfig = {
 //     apiKey: process.env.apiKey,
@@ -28,16 +33,10 @@ const analytics =  getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const authContext = {
-    auth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
-}
-
 export {
     app,
     analytics,
-    authContext,
+    auth,
     db,
 };
 

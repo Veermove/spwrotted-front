@@ -1,6 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { authContext } from '../firebaseSetup';
-import { User, UserCredential } from 'firebase/auth';
+import { auth } from '../firebaseSetup';
+import {
+    User,
+    UserCredential,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from 'firebase/auth';
 
 interface Props {
   children: React.ReactNode;
@@ -25,21 +30,19 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
 
 
     function signup(email: string, password: string) {
-        return authContext.createUserWithEmailAndPassword(
-                authContext.auth,
-                email, password
+        return createUserWithEmailAndPassword(
+                auth, email, password
             );
     }
 
     function login(email: string, password: string) {
-        return authContext.signInWithEmailAndPassword(
-            authContext.auth,
-            email, password
+        return signInWithEmailAndPassword(
+            auth, email, password
         );
     }
 
     useEffect(() => {
-        const unsubscribe = authContext.auth.onAuthStateChanged(user => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
             setCurrentUser(user);
             setLoading(false);
         });

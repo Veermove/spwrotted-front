@@ -10,7 +10,21 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 
 function App() {
-
+    /* #TODO: Fix layout
+    This is wrong. Final layout should be more akin to:
+    ________________________
+    |SPWR                  |
+    |______________________|
+    |    Posts     | L   I |
+    |    Posts     | O - N |
+    |    Posts     | G     |
+    |    Posts     |       |
+    |    Posts     |       |
+    |    Posts     |       |
+    |    Posts     |       |
+    |    Posts     |       |
+    So Routes element is not really needed here (for this purpose)
+    */
     return(
         <Container
             className="d-flex
