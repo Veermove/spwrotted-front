@@ -8,6 +8,7 @@ interface Props {
 
 export type AuthContextType = {
     signup: (email: string, password: string) => Promise<UserCredential>;
+    login: (email: string, password: string) => Promise<UserCredential>;
     currentUser: User | null;
 }
 
@@ -30,6 +31,13 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
             );
     }
 
+    function login(email: string, password: string) {
+        return authContext.signInWithEmailAndPassword(
+            authContext.auth,
+            email, password
+        );
+    }
+
     useEffect(() => {
         const unsubscribe = authContext.auth.onAuthStateChanged(user => {
             setCurrentUser(user);
@@ -41,7 +49,8 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
 
     const value = {
         currentUser,
-        signup
+        signup,
+        login,
     }
 
     return (
