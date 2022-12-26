@@ -4,7 +4,8 @@ import {
     User,
     UserCredential,
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    signOut,
 } from 'firebase/auth';
 
 interface Props {
@@ -14,7 +15,9 @@ interface Props {
 export type AuthContextType = {
     signup: (email: string, password: string) => Promise<UserCredential>;
     login: (email: string, password: string) => Promise<UserCredential>;
+    logout: () => Promise<void>;
     currentUser: User | null;
+    loading: boolean;
 }
 
 const AuthContext = React.createContext<AuthContextType | null>(null);
@@ -31,34 +34,41 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
 
     function signup(email: string, password: string) {
         return createUserWithEmailAndPassword(
-                auth, email, password
-            );
+            auth, email, password
+        ).then((user) => {
+            setCurrentUser(user.user);
+            setLoading(false);
+            return user;
+        })
     }
 
     function login(email: string, password: string) {
         return signInWithEmailAndPassword(
             auth, email, password
-        );
+        ).then((user) => {
+            setCurrentUser(user.user);
+            setLoading(false);
+            return user;
+        })
     }
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(user => {
-            setCurrentUser(user);
-            setLoading(false);
-        });
-        return unsubscribe
-    }, [])
-
+    function logout() {
+        setCurrentUser(null);
+        setLoading(true);
+        return signOut(auth);
+    }
 
     const value = {
         currentUser,
+        loading,
         signup,
         login,
+        logout,
     }
 
     return (
     <AuthContext.Provider value={value}>
-        {!loading && children}
+        {children}
     </AuthContext.Provider>
     )
 }

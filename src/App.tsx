@@ -1,13 +1,14 @@
 import './App.css';
 import React from "react";
 
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 import Dashboard from "./components/Dashboard";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+
+import SidebarLoggedOut from './components/SidebarLoggedOut';
+import PageSpanner from './components/PageSpanner';
 
 function App() {
     /* #TODO: Fix layout
@@ -25,27 +26,36 @@ function App() {
     |    Posts     |       |
     So Routes element is not really needed here (for this purpose)
     */
-    return(
-        <Container
-            className="d-flex
-                align-items-center
-                justify-conent-center"
-            style={{ minHeight: "100vh" }}
-        >
-        <div className="w-100" style={{ maxWidth: "400px" }}>
-            <Router>
-                <AuthProvider>
-                    <Routes>
-                        <Route path="/" element={<Dashboard />}/>
-                        <Route path="/signup" element={<Signup />}/>
-                        <Route path="/login" element={<Login />}/>
-                    </Routes>
-                </AuthProvider>
-            </Router>
-        </div>
-        </Container>
+    // return(
+    //     <Container
+    //         className="d-flex
+    //             align-items-center
+    //             justify-conent-center"
+    //         style={{ minHeight: "100vh" }}
+    //     >
+    //     <div className="w-100" style={{ maxWidth: "400px" }}>
+    //         <Router>
+    //             <AuthProvider>
+    //                 <Routes>
+    //                     <Route path="/" element={<Dashboard />}/>
+    //                     <Route path="/signup" element={<Signup />}/>
+    //                     <Route path="/login" element={<Login />}/>
+    //                 </Routes>
+    //
+    //         </Router>
+    //     </div>
+    //     </Container>
 
-    )
+    // )
+    return (
+        <>
+        <Container fluid>
+        <AuthProvider>
+            <PageSpanner />
+        </AuthProvider>
+        </Container>
+        </>
+        );
 }
 
 export default App;
