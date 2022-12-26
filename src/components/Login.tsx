@@ -1,9 +1,8 @@
 import React, { useRef, useState, useCallback } from 'react'
 import { Form, Button, Card, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom"
 import { useAuth } from '../context/AuthContext';
 
-export default function Login() {
+export default function Login () {
     const
         emailRef = useRef<HTMLInputElement | null>(null),
         passwordRef = useRef<HTMLInputElement | null>(null),
@@ -47,10 +46,7 @@ export default function Login() {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" ref={passwordRef} required />
                         </Form.Group>
-                        <Button disabled={loading} className="w-100" type="submit">Sign up!</Button>
-                        <div className="w-100 text-center mt-2">
-                            Need an account? <Link to="/signup">Sign up.</Link>
-                        </div>
+                        <Button disabled={loading} className="w-100" type="submit">Log in!</Button>
                     </Form>
                 </Card.Body>
             </Card>
