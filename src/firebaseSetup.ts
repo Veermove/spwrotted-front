@@ -28,10 +28,11 @@ const firebaseConfig = {
     measurementId: "G-WYKJMBSMT5",
 }
 
-const app = initializeApp(firebaseConfig);
-const analytics =  getAnalytics(app);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const
+    app = initializeApp(firebaseConfig),
+    analytics =  getAnalytics(app),
+    auth = getAuth(app),
+    db = getFirestore(app);
 
 export {
     app,

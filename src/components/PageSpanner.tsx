@@ -1,25 +1,21 @@
-import React from 'react'
-// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Button, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
-import SidebarLoggedOut from './SidebarLoggedOut';
-import { useAuth } from '../context/AuthContext';
+import Sidebar from './Sidebar';
+import Dashboard from './Dashboard';
 
 export default function PageSpanner() {
-    const { currentUser, loading, logout } = useAuth()!;
-
     return (<>
         <Row>
-            <Col xs={10} id="page-content-wrapper">
-                <>{currentUser?.email}</>
+            <Col xs={2} id="sidebar-wrapper-left">
+            </Col>
+            <Col xs={8} id="page-content-wrapper">
+                <Dashboard />
             </Col>
             <Col xs={2} id="sidebar-wrapper">
-                { loading && <SidebarLoggedOut />}
-                { !loading &&
-                    <Button onClick={async () => await logout() }> Sing out
-                    </Button>
-                }
+                <Sidebar />
             </Col>
         </Row>
     </>)
 }
+
+

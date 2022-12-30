@@ -11,24 +11,24 @@ export default function Login () {
         { login } = useAuth()!;
 
     const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
+        e.preventDefault();
 
-            if (emailRef.current === null || passwordRef.current === null) {
-                return setError("Please fill all required fields.");
-            }
+        if (emailRef.current === null || passwordRef.current === null) {
+            return setError("Please fill all required fields.");
+        }
 
-            try {
-                setError("");
-                setLoading(true);
-                await login(
-                    emailRef.current.value,
-                    passwordRef.current.value
-                );
-            } catch({ message }) {
-                setError("Login failed. " + message);
-            };
+        try {
+            setError("");
+            setLoading(true);
+            await login(
+                emailRef.current.value,
+                passwordRef.current.value
+            );
+        } catch({ message }) {
+            setError("Login failed. " + message);
+        };
 
-            setLoading(false);
+        setLoading(false);
     }, [login]);
 
     return (
