@@ -1,10 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { auth } from '../firebaseSetup';
+import { registerUser } from '../utils/PermissionServiceClient';
 import {
     User,
     UserCredential,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
+    deleteUser,
     signOut,
 } from 'firebase/auth';
 
@@ -13,7 +15,7 @@ interface Props {
 }
 
 export type AuthContextType = {
-    signup: (email: string, password: string) => Promise<UserCredential>;
+    signup: (email: string, password: string, name: string, pwrAssoc: [boolean, boolean]) => Promise<UserCredential | null>;
     login: (email: string, password: string) => Promise<UserCredential>;
     logout: () => Promise<void>;
     currentUser: User | null;
@@ -32,13 +34,21 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
         [loading, setLoading] = useState(true);
 
 
-    function signup(email: string, password: string) {
+    function signup(email: string, password: string, name: string, pwrAssoc: [boolean, boolean]) {
         return createUserWithEmailAndPassword(
             auth, email, password
-        ).then((user) => {
-            setCurrentUser(user.user);
-            setLoading(false);
-            return user;
+        ).then( async (user) => {
+            try {
+
+                const ret = await registerUser(user, name, pwrAssoc);
+                setCurrentUser(user.user);
+                setLoading(false);
+                return ret;
+
+            } catch (e) {
+                await deleteUser(user.user)
+                throw Error("Failed to register user");
+            }
         })
     }
 
