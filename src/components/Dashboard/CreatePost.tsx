@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Form } from 'react-bootstrap'
+import { Card, Form } from 'react-bootstrap'
 
 
 
@@ -89,8 +89,7 @@ export const MyTags: FC<{
 
 
 export default function CreatePost() {
-    const handleSubmit = () => {},
-        tagsRef = useRef<HTMLInputElement | null>(null);
+    const handleSubmit = () => {};
 
     const [inputString, setInputString] = useState("");
     const [words, setWords] = useState<string[]>([]);
@@ -116,22 +115,43 @@ export default function CreatePost() {
 
 
     return (
-        <Form onSubmit={handleSubmit}>
-            <Form.Group id="email">
-                <Form.Label style={{
-                    fontWeight: "900",
-                }}>
-                    Tags:
-                </Form.Label>
-                <MyTags values={words} onChange={updateWords} />
-                <Form.Control
-                    type="text"
-                    ref={tagsRef}
-                    required
-                    onChange={updateInput}
-                    value={inputString}
-                />
-            </Form.Group>
-        </Form>
+        <Card>
+            <Card.Title
+                style={{
+                    textAlign: "center",
+                    fontSize: "200%"
+                }}
+            >
+                Create your post
+            </Card.Title>
+            <Card.Body>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group id="tags">
+                        <Form.Label style={{
+                            fontWeight: "900",
+                        }}>
+                            Tags:
+                        </Form.Label>
+                        <MyTags values={words} onChange={updateWords} />
+                        <Form.Control
+                            type="text"
+                            required
+                            onChange={updateInput}
+                            value={inputString}
+                            placeholder="#PWrRocks"
+                        />
+                    </Form.Group>
+                    <br/>
+                    <Form.Group className="mb-3" id="content">
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            placeholder="How is your day at PWr?"
+                            maxLength={256}
+                        />
+                    </Form.Group>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
