@@ -39,11 +39,13 @@ export const AuthProvider: React.FC<Props> = ({children}) => {
             auth, email, password
         ).then( async (user) => {
             try {
+                const
+                    token          = await user.user.getIdToken(),
+                    registeredUser = await registerUser(token, user, name, pwrAssoc);
 
-                const ret = await registerUser(user, name, pwrAssoc);
                 setCurrentUser(user.user);
                 setLoading(false);
-                return ret;
+                return registeredUser;
 
             } catch (e) {
                 await deleteUser(user.user)

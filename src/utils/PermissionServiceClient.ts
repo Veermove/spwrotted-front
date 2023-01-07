@@ -7,7 +7,7 @@ const permissionSecrets = {
     }
 }
 
-export const registerUser = async (user: UserCredential, name: string, pwrAssoc: [boolean, boolean]) => {
+export const registerUser = async (jwtToken: string, user: UserCredential, name: string, pwrAssoc: [boolean, boolean]) => {
     const url = permissionSecrets.url + permissionSecrets.endpoints.create;
     const body = JSON.stringify({
         email: user.user.email,
@@ -22,7 +22,8 @@ export const registerUser = async (user: UserCredential, name: string, pwrAssoc:
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${jwtToken}`
         },
         body: body,
         mode: 'cors',
