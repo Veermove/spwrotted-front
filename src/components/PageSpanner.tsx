@@ -1,7 +1,7 @@
 import { Row, Col } from "react-bootstrap";
 
 import Sidebar from './Sidebar';
-import Dashboard from './Dashboard';
+import Dashboard from './Dashboard/Dashboard';
 
 export default function PageSpanner() {
     return (<>
