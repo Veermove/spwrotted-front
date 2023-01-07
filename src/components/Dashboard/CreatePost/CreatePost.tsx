@@ -1,23 +1,20 @@
-import React from 'react'
+import React, { FC } from 'react'
 import type { ChangeEvent } from 'react';
 import { useState, useCallback } from 'react';
-import { Card, FloatingLabel, Form } from 'react-bootstrap'
+import { Button, Card, FloatingLabel, Form } from 'react-bootstrap'
 import { PollOptions } from './PollOptions';
 import { UserAddedTags } from './UserTags';
-
-
-export const uniq = (input: string[]): string[] =>
-    Object.keys(
-        input.reduce(
-            (acc, el) => { acc[el] = 1; return acc; },
-            {} as Partial<Record<string, number>>,
-        ),
-    )
+import { uniq } from '../../../utils/utils';
+import { useAuth } from '../../../context/AuthContext';
+import { createPostVerified } from '../../../utils/EntityStoreClient';
+import { Post } from '../../../utils/Post';
 
 export const MAX_POST_LENGTH = 300;
 
-export default function CreatePost() {
-    const handleSubmit = () => {};
+export const CreatePost: FC<{
+    prependPost?: (createdPost: Post) => void,
+}> = ({prependPost}) => {
+    const { currentUser } = useAuth()!;
 
     // Handle Poll switch
     const [isPoll, setIsPoll] = useState(false);
@@ -49,8 +46,10 @@ export default function CreatePost() {
 
     // Handle Textarea
     const [charsLeft, setCharsLeft] = useState(MAX_POST_LENGTH);
-    const calculateCharsLeft = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        setCharsLeft(MAX_POST_LENGTH - e.target.value.length)
+    const [content, setContet] = useState("");
+    const updateTextValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        setCharsLeft(MAX_POST_LENGTH - e.target.value.length);
+        setContet(e.target.value);
     }, []);
 
     // Handle Poll Options
@@ -58,6 +57,19 @@ export default function CreatePost() {
     const updatePollOptions = useCallback((options: [number, string][]) => {
         setOptions(options);
     }, []);
+
+
+     const handleSubmit = useCallback(async () => {
+
+        try {
+            const response = await createPostVerified(
+                content, isPoll, options.map((opt) => opt[1]), words, currentUser
+            );
+            if (prependPost) prependPost(response);
+        } catch (e) {
+            console.log(e);
+        }
+    }, [content, isPoll, options, words, currentUser, prependPost]);
 
 
     return (
@@ -107,7 +119,7 @@ export default function CreatePost() {
                             rows={3}
                             placeholder={isPoll ? "What is your question to people?" : "How is your day at PWr?"}
                             maxLength={MAX_POST_LENGTH}
-                            onChange={calculateCharsLeft}
+                            onChange={updateTextValue}
                         />
                     </Form.Group>
                     { isPoll &&
@@ -118,6 +130,15 @@ export default function CreatePost() {
                     }
                 </Form>
             </Card.Body>
+            <Card.Footer>
+                <Button
+                    style={{
+                        marginRight: "10px"
+                    }}
+                    onClick={(e) => handleSubmit()}
+                >Post</Button>
+                <Button id="bdi">Reset</Button>
+            </Card.Footer>
         </Card>
     );
 }
