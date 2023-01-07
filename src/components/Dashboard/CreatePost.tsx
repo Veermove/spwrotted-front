@@ -1,10 +1,9 @@
-import React, { useRef } from 'react'
-import { Card, Form } from 'react-bootstrap'
-
-
-
-import type { FC, ChangeEvent, ReactNode } from 'react';
+import React from 'react'
+import type { ChangeEvent } from 'react';
 import { useState, useCallback } from 'react';
+import { Card, FloatingLabel, Form } from 'react-bootstrap'
+import { PollOptions } from './PollOptions';
+import { UserAddedTags } from './UserTags';
 
 
 export const uniq = (input: string[]): string[] =>
@@ -15,85 +14,19 @@ export const uniq = (input: string[]): string[] =>
         ),
     )
 
-
-
-export const MyTag: FC<{
-    value: string;
-    onClick?: (val: string) => void;
-}> = ({ value, onClick }) => {
-
-    return (
-        <div
-            style={{
-                display: "flex",
-                border: "1px solid #003377",
-                padding: "5px",
-                color: "white",
-                fontWeight: 700,
-                backgroundColor: "#0066EE",
-                width: "auto",
-                lineHeight: "18px",
-                borderRadius: "5px",
-                cursor: "pointer",
-            }}
-            onClick={() => { if (onClick) onClick(value); }}
-        >
-            { value }
-        </div>
-    );
-};
-
-
-export const MyTagContainer: FC<{ children: ReactNode; }> = ({ children }) => {
-
-    return (
-        <div style={{
-            display: "flex",
-            // border: "1px solid red",
-            padding: "5px",
-            gap: "10px",
-            // width: "500px",
-            flexDirection: "row",
-        }}>
-            { children }
-        </div>
-    );
-};
-
-
-export const MyTags: FC<{
-    values: string[];
-    onChange?: (values: string[]) => void;
-}> = ({ onChange, values }) => {
-
-    const onTagClick = useCallback((word: string) => {
-        if (onChange) {
-            onChange(values.filter((v) => v !== word));
-        }
-    }, [onChange, values])
-
-
-    return (
-        <MyTagContainer>
-            { values.map((value) => (
-                <MyTag
-                    key={value}
-                    value={value}
-                    onClick={onTagClick}
-                />
-            ))}
-        </MyTagContainer>
-    );
-};
-
-
+export const MAX_POST_LENGTH = 300;
 
 export default function CreatePost() {
     const handleSubmit = () => {};
 
+    // Handle Poll switch
+    const [isPoll, setIsPoll] = useState(false);
+
+
+    // Handle Tags
     const [inputString, setInputString] = useState("");
     const [words, setWords] = useState<string[]>([]);
-    const updateInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const updateInputTags = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         if (inputValue !== "" && inputValue[inputValue.length - 1] === " ") {
             setInputString("");
@@ -114,6 +47,19 @@ export default function CreatePost() {
     }, []);
 
 
+    // Handle Textarea
+    const [charsLeft, setCharsLeft] = useState(MAX_POST_LENGTH);
+    const calculateCharsLeft = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        setCharsLeft(MAX_POST_LENGTH - e.target.value.length)
+    }, []);
+
+    // Handle Poll Options
+    const [options, setOptions] = useState<[number, string][]>([]);
+    const updatePollOptions = useCallback((options: [number, string][]) => {
+        setOptions(options);
+    }, []);
+
+
     return (
         <Card>
             <Card.Title
@@ -126,30 +72,50 @@ export default function CreatePost() {
             </Card.Title>
             <Card.Body>
                 <Form onSubmit={handleSubmit}>
+                    <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        label="Poll?"
+                        onChange={(e) => setIsPoll(e.target.checked)}
+                    />
                     <Form.Group id="tags">
-                        <Form.Label style={{
-                            fontWeight: "900",
-                        }}>
-                            Tags:
-                        </Form.Label>
-                        <MyTags values={words} onChange={updateWords} />
-                        <Form.Control
-                            type="text"
-                            required
-                            onChange={updateInput}
-                            value={inputString}
-                            placeholder="#PWrRocks"
+                        <UserAddedTags
+                            values={words}
+                            onChange={updateWords}
                         />
+                        <FloatingLabel
+                            controlId="floatingInput"
+                            label="Your tags: #PWrRocks"
+                            className="mb-3"
+                        >
+                            <Form.Control
+                                type="text"
+                                required
+                                onChange={updateInputTags}
+                                value={inputString}
+                                placeholder=""
+                            />
+                        </FloatingLabel>
+
                     </Form.Group>
-                    <br/>
+                    <Form.Text className="text-muted">
+                        Characters left: {charsLeft}
+                    </Form.Text>
                     <Form.Group className="mb-3" id="content">
                         <Form.Control
                             as="textarea"
                             rows={3}
-                            placeholder="How is your day at PWr?"
-                            maxLength={256}
+                            placeholder={isPoll ? "What is your question to people?" : "How is your day at PWr?"}
+                            maxLength={MAX_POST_LENGTH}
+                            onChange={calculateCharsLeft}
                         />
                     </Form.Group>
+                    { isPoll &&
+                        <PollOptions
+                            values={options}
+                            updateOptions={updatePollOptions}
+                        />
+                    }
                 </Form>
             </Card.Body>
         </Card>
