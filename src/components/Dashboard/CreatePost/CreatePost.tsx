@@ -66,6 +66,8 @@ export const CreatePost: FC<{
                 content, isPoll, options.map((opt) => opt[1]), words, currentUser
             );
             if (prependPost) prependPost(response);
+            // !TODO
+            // Data: words, isPoll, options, content - should be erased.
         } catch (e) {
             console.log(e);
         }

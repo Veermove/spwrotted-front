@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { Post } from "./Post";
+import { CommentsAggregate, Post } from "./Post";
 
 // essownik12@mail.com
 // 1qazxsw2
@@ -10,6 +10,28 @@ const entitySecrets = {
         createVerified: "/post/create/verified",
         createUnerified: "/post/create/verified",
         pollVote: "/post/poll/vote",
+        getComments: (postId: string) => `/comments/${postId}`
+    }
+}
+
+export const getCommentsForPost = async (
+    postId: string
+) => {
+    const url = entitySecrets.url + entitySecrets.endpoints.getComments(postId);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        },
+        mode: 'cors',
+    });
+    if (response.ok) {
+        const ret = await response.json();
+        const { commentsAgregation } = ret;
+        return commentsAgregation as CommentsAggregate;
+    } else {
+        console.log(`Failed to fetch comments: ${response.status}`);
+        return { postId, comments: [] } as CommentsAggregate;
     }
 }
 

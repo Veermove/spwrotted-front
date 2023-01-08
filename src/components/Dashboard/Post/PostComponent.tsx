@@ -1,7 +1,9 @@
-import { FC, useCallback, useState } from "react";
-import { Button, Card, ListGroup } from "react-bootstrap";
+import type { FC } from "react";
+import { useCallback, useState } from "react";
+import { Button, Card } from "react-bootstrap";
 import { Post } from "../../../utils/Post";
 import { formatNumber } from "../../../utils/utils";
+import { Comments } from "./Comments";
 import { VotePollOptions } from "./VotePollOptions";
 
 export const PostComponent: FC<{
@@ -9,6 +11,10 @@ export const PostComponent: FC<{
 }> = ({postData}) => {
 
     const [hasLiked, setHasLiked] = useState(false);
+    const [commentsHidden, setCommentsHidden] = useState(true);
+    const switchComments = useCallback(() => {
+        setCommentsHidden(!commentsHidden);
+    }, [commentsHidden, setCommentsHidden]);
 
     return (<>
         <Card>
@@ -49,47 +55,56 @@ export const PostComponent: FC<{
                 }
 
             </Card.Body>
-            <Card.Footer
-                style = {{
-                    display:"flex",
-                    flexDirection:"row"
-                }}
-            >
-                <Button
-                    style={{
-                        display: "flex",
-                        border: "1px solid #003377",
-                        backgroundColor: "#0066EE",
-                        width: "auto",
-                        lineHeight: "18px",
-                        borderRadius: "5px",
+            <Card.Footer>
+                <div
+                    style = {{
+                        display:"flex",
+                        flexDirection:"row"
                     }}
                 >
-                    Like
-                </Button>
-                <Card.Text
-                    style={{
-                        display: "flex",
-                        width: "auto",
-                        lineHeight: "18px",
-                        borderRadius: "5px",
-                        paddingRight:"40px"
-                    }}
-                >
-                    Likes: {formatNumber(postData.likes)}
-                </Card.Text>
-                <Button
-                    style={{
-                        display: "flex",
-                        border: "1px solid #003377",
-                        backgroundColor: "#0066EE",
-                        width: "auto",
-                        lineHeight: "18px",
-                        borderRadius: "5px",
-                    }}
-                >
-                    Comment
-                </Button>
+                    <Button
+                        style={{
+                            display: "flex",
+                            border: "1px solid #003377",
+                            backgroundColor: "#0066EE",
+                            width: "auto",
+                            lineHeight: "18px",
+                            borderRadius: "5px",
+                        }}
+                    >
+                        Like
+                    </Button>
+                    <Card.Text
+                        style={{
+                            display: "flex",
+                            width: "auto",
+                            lineHeight: "18px",
+                            borderRadius: "5px",
+                            paddingRight:"40px"
+                        }}
+                    >
+                        Likes: {formatNumber(postData.likes)}
+                    </Card.Text>
+                    <Button
+                        style={{
+                            display: "flex",
+                            border: "1px solid #003377",
+                            backgroundColor: "#0066EE",
+                            width: "auto",
+                            lineHeight: "18px",
+                            borderRadius: "5px",
+                        }}
+                        onClick={(e) => switchComments()}
+                    >
+                        Comments
+                    </Button>
+                </div>
+                <br/>
+                { !commentsHidden &&
+                    <Comments
+                        postId={postData.id}
+                    />
+                }
             </Card.Footer>
         </Card>
         <br/>

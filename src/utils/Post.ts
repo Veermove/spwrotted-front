@@ -14,3 +14,13 @@ export interface Post {
     tags: string[],
     likes: number,
 }
+
+export interface CommentsAggregate {
+    postId: string,
+    comments: {
+        value: string,
+        likes: number,
+        author: string,
+        creationDate: Timestamp,
+    }[];
+}
