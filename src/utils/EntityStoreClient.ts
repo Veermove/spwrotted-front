@@ -10,28 +10,66 @@ const entitySecrets = {
         createVerified: "/post/create/verified",
         createUnerified: "/post/create/verified",
         pollVote: "/post/poll/vote",
+        postGetPagin: "/post/pagin",
         getComments: (postId: string) => `/comments/${postId}`
     }
+}
+
+export const getPostsPagin = async (
+    lastPost?: Post,
+    queryTags?: string[],
+) => {
+    const url = entitySecrets.url + entitySecrets.endpoints.postGetPagin;
+    const body = JSON.stringify({ lastPost });
+
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: body,
+            mode: 'cors',
+        });
+
+        if (response.ok) {
+            const ret = await response.json();
+            const { posts } = ret;
+            return posts as Post[]
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+    throw Error("Failed to fetch queries");
+
 }
 
 export const getCommentsForPost = async (
     postId: string
 ) => {
     const url = entitySecrets.url + entitySecrets.endpoints.getComments(postId);
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-        },
-        mode: 'cors',
-    });
-    if (response.ok) {
-        const ret = await response.json();
-        const { commentsAgregation } = ret;
-        return commentsAgregation as CommentsAggregate;
-    } else {
-        console.log(`Failed to fetch comments: ${response.status}`);
-        return { postId, comments: [] } as CommentsAggregate;
+
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+            },
+            mode: 'cors',
+        });
+        if (response.ok) {
+            const ret = await response.json();
+            const { commentsAgregation } = ret;
+            return commentsAgregation as CommentsAggregate;
+        } else {
+            console.log(`Failed to fetch comments: ${response.status}`);
+            return { postId, comments: [] } as CommentsAggregate;
+        }
+    } catch (e) {
+        console.log(e);
     }
 }
 

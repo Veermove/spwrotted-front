@@ -3,6 +3,7 @@ import './App.css';
 import { AuthProvider } from "./context/AuthContext";
 import { Container } from "react-bootstrap";
 import PageSpanner from './components/PageSpanner';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 function App() {
   /*________________________
@@ -17,13 +18,17 @@ function App() {
     |    Posts     |       |
     |    Posts     |       |
     */
+
+    const queryClient = new QueryClient();
     return (
         <>
-        <Container fluid>
-        <AuthProvider>
-            <PageSpanner />
-        </AuthProvider>
-        </Container>
+        <QueryClientProvider client={queryClient}>
+            <Container fluid>
+                <AuthProvider>
+                    <PageSpanner />
+                </AuthProvider>
+            </Container>
+        </QueryClientProvider>
         </>
         );
 }

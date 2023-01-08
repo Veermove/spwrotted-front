@@ -1,7 +1,7 @@
 import { Row, Col } from "react-bootstrap";
 
 import Sidebar from './Sidebar';
-import Dashboard from './Dashboard/Dashboard';
+import { MainColumn } from "./Dashboard/MainColumn";
 
 export default function PageSpanner() {
     return (<>
@@ -9,7 +9,7 @@ export default function PageSpanner() {
             <Col xs={2} id="sidebar-wrapper-left">
             </Col>
             <Col xs={8} id="page-content-wrapper">
-                <Dashboard />
+                <MainColumn />
             </Col>
             <Col xs={2} id="sidebar-wrapper">
                 <Sidebar />
