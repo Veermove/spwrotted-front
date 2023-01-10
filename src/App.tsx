@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import { AuthProvider } from "./context/AuthContext";
+import { Container } from "react-bootstrap";
+import PageSpanner from './components/PageSpanner';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  /*________________________
+    |SPWR                  |
+    |______________________|
+    |    Posts     | L   I |
+    |    Posts     | O - N |
+    |    Posts     | G     |
+    |    Posts     |       |
+    |    Posts     |       |
+    |    Posts     |       |
+    |    Posts     |       |
+    |    Posts     |       |
+    */
+
+    const queryClient = new QueryClient();
+    return (
+        <>
+        <QueryClientProvider client={queryClient}>
+            <Container fluid>
+                <AuthProvider>
+                    <PageSpanner />
+                </AuthProvider>
+            </Container>
+        </QueryClientProvider>
+        </>
+        );
 }
 
 export default App;
