@@ -30,7 +30,7 @@ export const Dashboard: FC<{
                     .map((s) => (
                     <PostComponent key={s.id} postData={s} />
                 ))
-            },
+            }
             {(isLoading || isError) &&
                 <Spinner animation="border" role="status">
                     <span className="visually-hidden">Loading...</span>

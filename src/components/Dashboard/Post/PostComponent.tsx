@@ -1,8 +1,10 @@
 import type { FC } from "react";
 import { useCallback, useState } from "react";
 import { Button, Card } from "react-bootstrap";
+import { likeAPost } from "../../../utils/EntityStoreClient";
 import { Post } from "../../../utils/Post";
 import { formatNumber } from "../../../utils/utils";
+import { LikeButtonCounter } from "../../common/LikeButtonCounter";
 import { Comments } from "./Comments";
 import { VotePollOptions } from "./VotePollOptions";
 
@@ -10,7 +12,10 @@ export const PostComponent: FC<{
     postData: Post,
 }> = ({postData}) => {
 
-    const [hasLiked, setHasLiked] = useState(false);
+    const likeFunction = useCallback((likeOrUnlike: boolean) => {
+        return likeAPost(likeOrUnlike, postData.id)
+    }, [postData.id]);
+
     const [commentsHidden, setCommentsHidden] = useState(true);
     const switchComments = useCallback(() => {
         setCommentsHidden(!commentsHidden);
@@ -62,29 +67,10 @@ export const PostComponent: FC<{
                         flexDirection:"row"
                     }}
                 >
-                    <Button
-                        style={{
-                            display: "flex",
-                            border: "1px solid #003377",
-                            backgroundColor: "#0066EE",
-                            width: "auto",
-                            lineHeight: "18px",
-                            borderRadius: "5px",
-                        }}
-                    >
-                        Like
-                    </Button>
-                    <Card.Text
-                        style={{
-                            display: "flex",
-                            width: "auto",
-                            lineHeight: "18px",
-                            borderRadius: "5px",
-                            paddingRight:"40px"
-                        }}
-                    >
-                        Likes: {formatNumber(postData.likes)}
-                    </Card.Text>
+                    <LikeButtonCounter
+                        likeFunction={likeFunction}
+                        initialLikes={postData.likes}
+                    />
                     <Button
                         style={{
                             display: "flex",

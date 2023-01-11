@@ -3,13 +3,15 @@ import { ListGroup, Spinner } from "react-bootstrap";
 import { useQuery } from "react-query";
 import { getCommentsForPost } from "../../../utils/EntityStoreClient";
 import { CommentComponent } from "./CommentComponent";
+import { CreateComment } from "./CreateComment";
 
 export const Comments: FC<{
     postId: string,
 }> = ({postId}) => {
 
     const { isLoading, isError, data} = useQuery(postId, ({ queryKey }) =>
-        getCommentsForPost(queryKey[0])
+        getCommentsForPost(queryKey[0]),
+        { keepPreviousData: true }
     );
 
     if (isLoading || isError) {
@@ -24,16 +26,18 @@ export const Comments: FC<{
         <ListGroup>
             {
                 data!.comments
-                    .map((comm) => (
-                        <ListGroup.Item
-                            key={comm.creationDate.toString()}
+                    .map((comm) => {
+                        return (<ListGroup.Item
+                            key={comm.creationDate.seconds}
                         >
                             <CommentComponent
+                                postId={postId}
                                 comment={comm}
                             />
-                        </ListGroup.Item>
-                    ))
+                        </ListGroup.Item>)
+                    })
             }
         </ListGroup>
+        <CreateComment postId={postId}/>
     </>
 }

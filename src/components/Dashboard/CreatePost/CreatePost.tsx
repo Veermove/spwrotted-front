@@ -1,13 +1,14 @@
 import React, { FC } from 'react'
 import type { ChangeEvent } from 'react';
 import { useState, useCallback } from 'react';
-import { Button, Card, FloatingLabel, Form } from 'react-bootstrap'
+import { Button, Card, FloatingLabel, Form, OverlayTrigger } from 'react-bootstrap'
 import { PollOptions } from './PollOptions';
 import { UserAddedTags } from './UserTags';
 import { uniq } from '../../../utils/utils';
 import { useAuth } from '../../../context/AuthContext';
 import { createPostVerified } from '../../../utils/EntityStoreClient';
 import { Post } from '../../../utils/Post';
+import OnlyForLoggedInUser from '../../common/OnlyForLoggedInUser';
 
 export const MAX_POST_LENGTH = 300;
 
@@ -25,7 +26,7 @@ export const CreatePost: FC<{
     const [words, setWords] = useState<string[]>([]);
     const updateInputTags = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
-        if (inputValue !== "" && inputValue[inputValue.length - 1] === " ") {
+        if (inputValue.trim() !== "" && inputValue[inputValue.length - 1] === " ") {
             setInputString("");
             const cTag = inputValue.trim();
             setWords(uniq([
@@ -47,16 +48,27 @@ export const CreatePost: FC<{
     // Handle Textarea
     const [charsLeft, setCharsLeft] = useState(MAX_POST_LENGTH);
     const [content, setContet] = useState("");
-    const updateTextValue = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        setCharsLeft(MAX_POST_LENGTH - e.target.value.length);
-        setContet(e.target.value);
+    const updateTextValue = useCallback((value: string) => {
+        setCharsLeft(MAX_POST_LENGTH - value.length);
+        setContet(value);
     }, []);
+
+    const updateTextValueFromEvent = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        updateTextValue(e.target.value);
+    }, [updateTextValue]);
 
     // Handle Poll Options
     const [options, setOptions] = useState<[number, string][]>([]);
     const updatePollOptions = useCallback((options: [number, string][]) => {
         setOptions(options);
     }, []);
+
+    const clearDataFields = useCallback(() => {
+        setWords([]);
+        setIsPoll(false);
+        updatePollOptions([]);
+        updateTextValue("")
+    }, [updatePollOptions, updateTextValue]);
 
 
      const handleSubmit = useCallback(async () => {
@@ -65,13 +77,11 @@ export const CreatePost: FC<{
             const response = await createPostVerified(
                 content, isPoll, options.map((opt) => opt[1]), words, currentUser
             );
-            if (prependPost) prependPost(response);
-            // !TODO
-            // Data: words, isPoll, options, content - should be erased.
+            if ( response ) clearDataFields()
         } catch (e) {
             console.log(e);
         }
-    }, [content, isPoll, options, words, currentUser, prependPost]);
+    }, [content, isPoll, options, words, currentUser, clearDataFields]);
 
 
     return (
@@ -90,6 +100,7 @@ export const CreatePost: FC<{
                         type="switch"
                         id="custom-switch"
                         label="Poll?"
+                        disabled={!currentUser}
                         onChange={(e) => setIsPoll(e.target.checked)}
                     />
                     <Form.Group id="tags">
@@ -121,7 +132,7 @@ export const CreatePost: FC<{
                             rows={3}
                             placeholder={isPoll ? "What is your question to people?" : "How is your day at PWr?"}
                             maxLength={MAX_POST_LENGTH}
-                            onChange={updateTextValue}
+                            onChange={updateTextValueFromEvent}
                         />
                     </Form.Group>
                     { isPoll &&
