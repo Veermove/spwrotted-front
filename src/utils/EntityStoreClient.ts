@@ -25,7 +25,7 @@ export const getPostsPagin = async (
     const url = entitySecrets.url + entitySecrets.endpoints.postGetPagin;
     const body = JSON.stringify({
         lastPostId: lastPost?.id,
-        queryTags: queryTags,
+        queryTags: !queryTags?.length ? undefined : queryTags,
     });
 
     try {

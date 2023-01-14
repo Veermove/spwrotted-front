@@ -1,14 +1,12 @@
 import React, { FC } from 'react'
 import type { ChangeEvent } from 'react';
 import { useState, useCallback } from 'react';
-import { Button, Card, FloatingLabel, Form, OverlayTrigger } from 'react-bootstrap'
+import { Button, Card, FloatingLabel, Form } from 'react-bootstrap'
 import { PollOptions } from './PollOptions';
 import { UserAddedTags } from './UserTags';
 import { uniq } from '../../../utils/utils';
 import { useAuth } from '../../../context/AuthContext';
 import { createPostVerified } from '../../../utils/EntityStoreClient';
-import { Post } from '../../../utils/Post';
-import OnlyForLoggedInUser from '../../common/OnlyForLoggedInUser';
 
 export const MAX_POST_LENGTH = 300;
 
@@ -131,6 +129,7 @@ export const CreatePost: FC<{}> = ({}) => {
                             placeholder={isPoll ? "What is your question to people?" : "How is your day at PWr?"}
                             maxLength={MAX_POST_LENGTH}
                             onChange={updateTextValueFromEvent}
+                            value={content}
                         />
                     </Form.Group>
                     { isPoll &&
@@ -148,7 +147,11 @@ export const CreatePost: FC<{}> = ({}) => {
                     }}
                     onClick={(e) => handleSubmit()}
                 >Post</Button>
-                <Button id="bdi">Reset</Button>
+                <Button id="bdi"
+                    onClick={(e) => clearDataFields()}
+                >
+                    Reset
+                </Button>
             </Card.Footer>
         </Card>
     );

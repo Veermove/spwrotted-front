@@ -37,7 +37,7 @@ export const PostsBulk: FC<{}> = ({}) => {
     const [data, setData] = useState<Post[] | undefined>(undefined);
 
     const appendPosts = useCallback((newPosts: Post[], invalidate?: boolean) => {
-        if (data && invalidate) {
+        if (data && !invalidate) {
             setData(uniqPosts([...data, ...newPosts]));
         } else {
             setData(newPosts);
@@ -75,6 +75,8 @@ export const PostsBulk: FC<{}> = ({}) => {
     const searchByTags = useCallback((e: MouseEvent<HTMLElement>) => {
         if (queryTags) {
             fetchData(undefined, queryTags, true);
+        } else {
+            fetchData();
         }
     }, [fetchData, queryTags]);
 
@@ -120,6 +122,7 @@ export const PostsBulk: FC<{}> = ({}) => {
                     style={{
                         marginLeft: "10px"
                     }}
+                    disabled={false}
                     onClick={searchByTags}
                 >
                     Search!
