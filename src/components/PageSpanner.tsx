@@ -2,20 +2,20 @@ import { Row, Col } from "react-bootstrap";
 
 import Sidebar from './Sidebar';
 import { MainColumn } from "./Dashboard/MainColumn";
+import { Outlet, Route, Routes } from "react-router-dom";
+import PageMissing from "./common/PageMissing";
 
 export default function PageSpanner() {
     return (<>
         <Row>
-            <Col xs={2} id="sidebar-wrapper-left">
+            <Col id="sidebar-wrapper-left">
             </Col>
             <Col xs={8} id="page-content-wrapper">
-                <MainColumn />
+                <Outlet />
             </Col>
-            <Col xs={2} id="sidebar-wrapper">
+            <Col id="sidebar-wrapper">
                 <Sidebar />
             </Col>
         </Row>
     </>)
 }
-
-

@@ -71,7 +71,7 @@ export const CreatePost: FC<{}> = ({}) => {
 
         try {
             const response = await createPostVerified(
-                content, isPoll, options.map((opt) => opt[1]), words, currentUser
+                content, isPoll, options.map((opt) => opt[1]), words, currentUser?.[0]
             );
             if ( response ) clearDataFields()
         } catch (e) {

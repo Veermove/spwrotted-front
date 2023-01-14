@@ -15,7 +15,7 @@ export const CreateComment: FC<{
     }, [setCommentText]);
 
     const publishComment = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-        createComment(commentText, postId, currentUser!)
+        createComment(commentText, postId, currentUser![0])
         setCommentText("");
     }, [commentText, currentUser, postId])
 
