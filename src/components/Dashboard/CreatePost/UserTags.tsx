@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import type { FC, ReactNode } from "react";
+import { CloseButton } from "react-bootstrap";
 
 export const UserTag: FC<{
     value: string;
@@ -21,7 +22,14 @@ export const UserTag: FC<{
             }}
         >
             <div style={{ display: "inline-block"}}>{ value }</div>
-            <div
+            <CloseButton style={{
+                display: "inline-block",
+                width: "8px",
+                height: "8px",
+                marginLeft: "5px",
+            }} onClick={() => { if (onClick) onClick(value); }}
+            />
+            {/* <div
                 style={{
                     display: "inline-block",
                     backgroundColor: "#0099FF",
@@ -36,7 +44,7 @@ export const UserTag: FC<{
                 onClick={() => { if (onClick) onClick(value); }}
             >
                 X
-            </div>
+            </div> */}
         </div>
     );
 };

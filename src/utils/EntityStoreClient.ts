@@ -23,7 +23,10 @@ export const getPostsPagin = async (
     queryTags?: string[],
 ) => {
     const url = entitySecrets.url + entitySecrets.endpoints.postGetPagin;
-    const body = JSON.stringify({ lastPost });
+    const body = JSON.stringify({
+        lastPostId: lastPost?.id,
+        queryTags: queryTags,
+    });
 
     try {
         const response = await fetch(url, {

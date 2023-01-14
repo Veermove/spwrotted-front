@@ -1,38 +1,22 @@
-import { FC, useState } from "react";
-import { useQuery } from "react-query";
-import { getPostsPagin } from "../../utils/EntityStoreClient";
-import { Post } from "../../utils/Post";
-import { Dashboard } from "./Dashboard";
+import { FC } from "react";
+import { PostsBulk } from "./Dashboard";
+import { CreatePost } from "./CreatePost/CreatePost";
+import { Accordion } from "react-bootstrap";
 
 export const MainColumn: FC<{
 }> = ({}) => {
-
-    const [lastPost, setLastPost] = useState<Post | undefined>(undefined);
-
-    // #TODO posts should be queired based on currently selected tags
-    const [searchTags, setSearchTags] = useState<string[]>([]);
-
-    const {
-        isLoading,
-        isError,
-        data
-    } = useQuery(
-        ["posts", searchTags],
-        () => {
-            return getPostsPagin(undefined)
-                .then((posts) => {
-                    setLastPost(posts[posts.length - 1]);
-                    return posts;
-                })
-        },
-        { keepPreviousData: true }
-    );
-
     return <>
-        <Dashboard
-            data={data}
-            isLoading={isLoading}
-            isError={isError}
-        />
+        <Accordion defaultActiveKey="1">
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>
+                    <h2 style={{fontWeight: "650"}}>Create your post</h2>
+                </Accordion.Header>
+                <Accordion.Body>
+                    <CreatePost/>
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
+        <br/>
+        <PostsBulk/>
     </>
 }

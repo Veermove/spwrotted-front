@@ -1,3 +1,5 @@
+import { Post } from "./Post";
+
 const formatter = Intl.NumberFormat("en", {notation: "compact"});
 
 export type PublishLikeOrUnlikeFunction =
@@ -13,3 +15,14 @@ export const uniq = (input: string[]): string[] =>
             {} as Partial<Record<string, number>>,
         ),
     )
+
+export const uniqPosts = (input: Post[]): Post[] => {
+    const result = {} as Record<string, Post>;
+
+        input.forEach(
+            (p) => {result[p.id] = p; }
+        )
+
+    return Object.values(result);
+
+}

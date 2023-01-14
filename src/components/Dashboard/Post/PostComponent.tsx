@@ -74,8 +74,7 @@ export const PostComponent: FC<{
                     <Button
                         style={{
                             display: "flex",
-                            border: "1px solid #003377",
-                            backgroundColor: "#0066EE",
+                            marginLeft: "10px",
                             width: "auto",
                             lineHeight: "18px",
                             borderRadius: "5px",
@@ -96,6 +95,3 @@ export const PostComponent: FC<{
         <br/>
     </>)
 }
-
-
-

@@ -12,9 +12,7 @@ import OnlyForLoggedInUser from '../../common/OnlyForLoggedInUser';
 
 export const MAX_POST_LENGTH = 300;
 
-export const CreatePost: FC<{
-    prependPost?: (createdPost: Post) => void,
-}> = ({prependPost}) => {
+export const CreatePost: FC<{}> = ({}) => {
     const { currentUser } = useAuth()!;
 
     // Handle Poll switch
