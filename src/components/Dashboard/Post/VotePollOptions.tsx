@@ -6,7 +6,8 @@ import { VotePollOption } from "./VotePollOption";
 export const VotePollOptions: FC<{
     pollOptions: {option: string, votes: number}[],
     postId: string,
-}> = ({pollOptions, postId}) => {
+    disabled: boolean,
+}> = ({pollOptions, postId, disabled}) => {
 
     const [statePollOptions, setStatePollOptions] = useState(pollOptions);
     const [totalVotes, setTotalVotes] = useState(
@@ -53,12 +54,13 @@ export const VotePollOptions: FC<{
                             addVote={addVote}
                             removeVote={removeVote}
                             totalVotes={totalVotes}
-                            hasVoted={hasVoted}/>
+                            hasVoted={hasVoted}
+                            disabled={disabled}/>
                     </ListGroup.Item>
                 ))}
             <ListGroup.Item>
                 <Button
-                    disabled={hasVoted}
+                    disabled={disabled || hasVoted}
                     onClick={(e) => {submitVotes()}}
                 >Submit votes</Button>
             </ListGroup.Item>

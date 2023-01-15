@@ -8,7 +8,8 @@ export const VotePollOption: FC<{
     addVote: (vote: string) => void,
     removeVote: (vote: string) => void,
     hasVoted: boolean,
-}> = ({pollOption, totalVotes, addVote, removeVote, hasVoted}) => {
+    disabled: boolean,
+}> = ({pollOption, totalVotes, addVote, removeVote, hasVoted, disabled}) => {
     const onCheckClick = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         e.target.checked
             ? addVote(pollOption.option)
@@ -27,7 +28,7 @@ export const VotePollOption: FC<{
                     display: "flex",
                     paddingRight: "15px"
                 }}
-                disabled={hasVoted}
+                disabled={disabled || hasVoted}
                 onChange={onCheckClick}
             />
             <Card.Text

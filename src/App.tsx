@@ -7,8 +7,9 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MainColumn } from './components/Dashboard/MainColumn';
 import PageMissing from './components/common/PageMissing';
-import { YourProfile } from './components/user/YourProfile';
-import { MenageUsers } from './components/user/MenageUsers';
+import { YourProfile } from './components/User/YourProfile';
+import { MenageUsers } from './components/User/MenageUsers';
+import { ModeratePosts } from './components/PostModeration/ModeratePosts';
 
 function App() {
   /*________________________
@@ -36,6 +37,7 @@ function App() {
                                 <Route index element={<MainColumn />} />
                                 <Route path="profile" element={<YourProfile />} />
                                 <Route path="manageusers" element={<MenageUsers />} />
+                                <Route path="moderate" element={<ModeratePosts />} />
                                 <Route path="*" element={<PageMissing />} />
                             </Route>
                         </Routes>

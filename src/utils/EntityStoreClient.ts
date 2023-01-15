@@ -10,12 +10,68 @@ const entitySecrets = {
         createVerified: "/post/create/verified",
         createUnerified: "/post/create/verified",
         pollVote: "/post/poll/vote",
+        postModerate: "/post/moderate/next",
+        postModerateDecide: (postId: string) => `/post/moderate/${postId}/decide`,
         postGetPagin: "/post/pagin",
         likeAPost: "/post/like",
         getComments: "/comments",
         createComment: "/comments/create",
         likeAComment: "/comments/like",
     }
+}
+
+export const decideModerate = async (email: string, postId: string, accepeted: boolean) => {
+    const url = entitySecrets.url + entitySecrets.endpoints.postModerateDecide(postId);
+    const body = JSON.stringify({ email, accepeted });
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: body,
+            mode: 'cors',
+        });
+
+        if (response.ok) {
+            return;
+        } else {
+            console.log((await response.json()).err);
+        }
+    } catch (e) {
+        console.log(e);
+        throw Error("Failed to set new hidden value on post");
+    }
+}
+
+export const moderateNext = async (email: string) => {
+    const url = entitySecrets.url + entitySecrets.endpoints.postModerate;
+    const body = JSON.stringify({ email });
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: body,
+            mode: 'cors',
+        });
+
+        if (response.ok) {
+            const resp = await response.json();
+            if (resp.post) {
+                return resp.post as Post
+            } else {
+                return null;
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+    return null;
+
 }
 
 export const getPostsPagin = async (

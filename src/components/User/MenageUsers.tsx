@@ -60,7 +60,7 @@ export const MenageUsers: FC<{
     }
 
     if (currentUser[1].role !== 1) {
-        return <h1> Looks like you're not a moderator</h1>
+        return <h1> Oops, Looks like you're not a moderator</h1>
     }
 
     return <>

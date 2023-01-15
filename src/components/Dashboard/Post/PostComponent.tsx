@@ -3,10 +3,9 @@ import { useCallback, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { likeAPost } from "../../../utils/EntityStoreClient";
 import { Post } from "../../../utils/Post";
-import { formatNumber } from "../../../utils/utils";
 import { LikeButtonCounter } from "../../common/LikeButtonCounter";
 import { Comments } from "./Comments";
-import { VotePollOptions } from "./VotePollOptions";
+import { PostBody } from "./PostBody";
 
 export const PostComponent: FC<{
     postData: Post,
@@ -23,43 +22,10 @@ export const PostComponent: FC<{
 
     return (<>
         <Card>
-            <Card.Header
-                style={{
-                    display:"flex",
-                    flexDirection:"row",
-                }}
-            >
-                <div
-                    style={{
-                        display:"flex",
-                        paddingRight: "15px",
-                    }}
-                >
-                    {postData.author}
-                </div>
-                {postData.tags.slice(0, 10).map((t) => (
-                    <Card.Text
-                        key={t}
-                        style={{
-                            display:"flex",
-                            paddingRight:"5px"
-                        }}
-                    >
-                        {t}
-                    </Card.Text>
-                ))}
-            </Card.Header>
-            <Card.Body>
-
-                {postData.content}
-                {postData.isPoll &&
-                    <VotePollOptions
-                        pollOptions={postData.pollOptions!}
-                        postId={postData.id}
-                    />
-                }
-
-            </Card.Body>
+            <PostBody
+                postData={postData}
+                disabled={false}
+            />
             <Card.Footer>
                 <div
                     style = {{
