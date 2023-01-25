@@ -23,7 +23,7 @@ export type AuthContextType = {
     loading: boolean;
 }
 
-const AuthContext = React.createContext<AuthContextType | null>(null);
+export const AuthContext = React.createContext<AuthContextType | null>(null);
 
 export function useAuth() {
     return useContext(AuthContext);
